@@ -1,0 +1,3 @@
+function FindProxyForURL(url, host) {
+    return "PROXY 10.255.73.22:8080";
+}

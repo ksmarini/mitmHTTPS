@@ -3,6 +3,8 @@ import sys
 from termcolor import cprint
 
 COMMANDS = [
+    'iptables -F',
+    'iptables --policy FORWARD ACCEPT',
     'sysctl -w net.ipv4.ip_forward=1'
 ]
 
