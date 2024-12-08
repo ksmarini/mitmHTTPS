@@ -2,9 +2,6 @@ import time
 import sys
 from termcolor import cprint
 from scapy.layers.l2 import arp_mitm
-# from scapy.layers.l2 import arp_mitm, ARP, Ether
-# from scapy.layers.dns import DNS
-# from scapy.sendrecv import sniff, srp
 
 
 def run(routerip, targetip, interface):

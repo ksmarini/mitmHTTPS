@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import argparse
 import os
 import sys
@@ -12,9 +13,9 @@ parser.add_argument('--router', help='Router IP (Used for MITM ARP spoofing)',
 
 opts = parser.parse_args()
 
-#if os.getuid() != 0:
-#    print('Must be run as root')
-#    sys.exit(1)
+if os.getuid() != 0:
+    print('Must be run as root')
+    sys.exit(1)
 
 
 def main():
@@ -24,8 +25,7 @@ def main():
                                                      opts.iface))
     t_dns = threading.Thread(target=dns.run, args=(opts.router, opts.target,
                                                      opts.iface))
-    t_http = threading.Thread(target=http.run, args=(opts.router, opts.target,
-                                                     opts.iface))
+    t_http = threading.Thread(target=http.run, args=(opts.iface,))
     t_mitm.start()
     t_dns.start()
     t_http.start()
