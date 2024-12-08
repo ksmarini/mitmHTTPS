@@ -2,7 +2,7 @@ import argparse
 import os
 import sys
 import threading
-from stage import mitm
+from stage import mitm, router
 
 parser = argparse.ArgumentParser(description='MITM SSL attack tool')
 parser.add_argument('--iface', help='Interface to use', required=True)
@@ -18,8 +18,9 @@ opts = parser.parse_args()
 
 
 def main():
-    t_mitm = threading.Thread(target=mitm.run, args=(opts.router, opts.target,
-                                                       opts.iface))
+    router.run()
+
+    t_mitm = threading.Thread(target=mitm.run, args=(opts.router, opts.target,                                                   opts.iface))
     t_mitm.start()
 
 
