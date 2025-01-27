@@ -9,7 +9,7 @@ COMMANDS = [
 ]
 
 def run():
-    print('Configuring attacker machine as a router ...')
+    cprint('Configuring attacker machine as a router ...', "white", )
     for c in COMMANDS:
         cprint(f'Executing: {c}', "light_grey", attrs=['dark'])
         command = subprocess.run(c.split(), stdout=subprocess.DEVNULL,
