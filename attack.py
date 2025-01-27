@@ -11,6 +11,7 @@ parser.add_argument('--target', help='Target IP to attack', required=True)
 parser.add_argument('--router', help='Router IP (Used for MITM ARP spoofing)',
                     required=True)
 
+
 opts = parser.parse_args()
 
 if os.getuid() != 0:
