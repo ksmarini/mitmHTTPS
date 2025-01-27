@@ -16,3 +16,4 @@ def run(routerip, targetip, interface):
         except KeyboardInterrupt:
             print('Exiting...')
             sys.exit(2)
+
